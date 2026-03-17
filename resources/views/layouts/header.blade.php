@@ -6,6 +6,28 @@
 <ul class="navbar-nav navbar-right">
 
     @if(\Illuminate\Support\Facades\Auth::user())
+        @php $notifCount = 0; @endphp
+        <li class="nav-item dropdown" style="position:relative; display:flex; align-items:center;">
+            <a href="#" data-toggle="dropdown" class="nav-link nav-link-lg" style="position:relative; padding-right:1rem;">
+                <i class="fas fa-bell" style="font-size: 1.2rem;"></i>
+                @if($notifCount > 0)
+                    <span class="badge badge-danger" style="position:absolute; top:4px; right:4px; font-size:0.6rem; padding:2px 5px; border-radius:50%;">{{ $notifCount }}</span>
+                @endif
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" style="min-width:280px;">
+                <div class="dropdown-title">Notificaciones</div>
+                @if($notifCount > 0)
+                    {{-- Aquí irán las notificaciones reales --}}
+                @else
+                    <a href="#" class="dropdown-item text-muted">
+                        <i class="fas fa-check-circle text-success mr-2"></i> Sin notificaciones nuevas
+                    </a>
+                @endif
+            </div>
+        </li>
+    @endif
+
+    @if(\Illuminate\Support\Facades\Auth::user())
         <li class="dropdown">
             <a href="#" data-toggle="dropdown"
                class="nav-link dropdown-toggle nav-link-lg nav-link-user">
