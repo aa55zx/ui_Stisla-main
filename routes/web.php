@@ -5,6 +5,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RolController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\ActividadComplementariaController;
+use App\Http\Controllers\InscripcionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -48,4 +50,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('roles',    RolController::class);
     Route::resource('usuarios', UsuarioController::class);
     Route::resource('blogs',    BlogController::class);
+
+    Route::resource('actividades', ActividadComplementariaController::class);
+    Route::post('/inscripciones', [InscripcionController::class, 'store'])->name('inscripciones.store');
 });

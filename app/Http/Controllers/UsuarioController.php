@@ -44,8 +44,6 @@ class UsuarioController extends Controller
             'telefono'         => $request->telefono,
         ]);
 
-        dd($user->id, $user->email);
-
         $userCreado = User::where('email', $request->email)->first();
 app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 try {

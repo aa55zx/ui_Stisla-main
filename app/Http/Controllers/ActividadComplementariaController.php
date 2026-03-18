@@ -1,85 +1,35 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\ActividadComplementaria;
 use Illuminate\Http\Request;
+use App\Models\ActividadComplementaria;
 
 class ActividadComplementariaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        $actividades = ActividadComplementaria::with(['departamento', 'grupos', 'carreras'])
+            ->where('disponible', true)
+            ->paginate(9);
+        return view('actividades.index', compact('actividades'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function show($id)
     {
-        //
+        $actividad = ActividadComplementaria::with([
+            'departamento',
+            'carreras',
+            'grupos.instructor.usuario',
+            'grupos.ubicacion',
+            'grupos.horarios.dia',
+        ])->findOrFail($id);
+
+        return view('actividades.show', compact('actividad'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\ActividadComplementaria  $actividadComplementaria
-     * @return \Illuminate\Http\Response
-     */
-    public function show(ActividadComplementaria $actividadComplementaria)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\ActividadComplementaria  $actividadComplementaria
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(ActividadComplementaria $actividadComplementaria)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ActividadComplementaria  $actividadComplementaria
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, ActividadComplementaria $actividadComplementaria)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\ActividadComplementaria  $actividadComplementaria
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(ActividadComplementaria $actividadComplementaria)
-    {
-        //
-    }
+    public function create() {}
+    public function store(Request $request) {}
+    public function edit($id) {}
+    public function update(Request $request, $id) {}
+    public function destroy($id) {}
 }
