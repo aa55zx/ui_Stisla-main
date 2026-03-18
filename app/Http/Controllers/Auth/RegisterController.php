@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -12,7 +11,6 @@ class RegisterController extends Controller
 {
     use RegistersUsers;
 
-    // Redirigir según tipo_usuario después del registro
     protected function redirectTo()
     {
         return match (auth()->user()->tipo_usuario) {
@@ -42,26 +40,33 @@ class RegisterController extends Controller
             'nombre.required'           => 'El nombre es obligatorio.',
             'apellido_paterno.required' => 'El apellido paterno es obligatorio.',
             'email.required'            => 'El correo es obligatorio.',
-            'email.unique'              => 'Este correo ya está registrado.',
+            'email.unique'              => 'Este correo ya esta registrado.',
             'tipo_usuario.required'     => 'Selecciona un tipo de usuario.',
-            'password.required'         => 'La contraseña es obligatoria.',
-            'password.confirmed'        => 'Las contraseñas no coinciden.',
-            'password.min'              => 'La contraseña debe tener al menos 6 caracteres.',
+            'password.required'         => 'La contrasena es obligatoria.',
+            'password.confirmed'        => 'Las contrasenas no coinciden.',
+            'password.min'              => 'La contrasena debe tener al menos 6 caracteres.',
         ]);
     }
 
     protected function create(array $data)
-    {
-        return User::create([
-            'nombre'           => $data['nombre'],
-            'apellido_paterno' => $data['apellido_paterno'],
-            'apellido_materno' => $data['apellido_materno'] ?? null,
-            'email'            => $data['email'],
-            'contraseña'       => Hash::make($data['password']),
-            'tipo_usuario'     => $data['tipo_usuario'],
-            'num_control'      => $data['num_control'] ?? null,
-            'telefono'         => $data['telefono'] ?? null,
-            'ultimo_acceso'    => now(),
-        ]);
-    }
+{
+    $user = User::create([
+        'nombre'           => $data['nombre'],
+        'apellido_paterno' => $data['apellido_paterno'],
+        'apellido_materno' => $data['apellido_materno'] ?? null,
+        'email'            => $data['email'],
+        'contrasena'       => Hash::make($data['password']),
+        'tipo_usuario'     => $data['tipo_usuario'],
+        'num_control'      => $data['num_control'] ?? null,
+        'telefono'         => $data['telefono'] ?? null,
+        'ultimo_acceso'    => now(),
+    ]);
+
+    app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+    $user->assignRole($data['tipo_usuario']);
+
+    return $user;
+}
+
+    
 }

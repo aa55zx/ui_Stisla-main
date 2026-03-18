@@ -12,18 +12,14 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
-    // Tabla real en la BD
     protected $table = 'USUARIO';
-
-    // Clave primaria personalizada
-    protected $primaryKey = 'id_usuario';
 
     protected $fillable = [
         'nombre',
         'apellido_paterno',
         'apellido_materno',
         'email',
-        'contraseña',
+        'contrasena',
         'tipo_usuario',
         'num_control',
         'telefono',
@@ -31,7 +27,7 @@ class User extends Authenticatable
     ];
 
     protected $hidden = [
-        'contraseña',
+        'contrasena',
         'remember_token',
     ];
 
@@ -39,13 +35,11 @@ class User extends Authenticatable
         'ultimo_acceso' => 'datetime',
     ];
 
-    // Laravel usa este método para obtener la contraseña al autenticar
     public function getAuthPassword()
     {
-        return $this->contraseña;
+        return $this->contrasena;
     }
 
-    // Atributo helper: nombre completo
     public function getNombreCompletoAttribute(): string
     {
         return trim("{$this->nombre} {$this->apellido_paterno} {$this->apellido_materno}");

@@ -13,6 +13,20 @@ Route::get('/', function () {
 // Rutas de autenticación de Laravel (login, register, password reset, etc.)
 Auth::routes();
 
+Route::get('/debug-user', function () {
+    $user = Auth::user();
+    if (!$user) return 'No hay usuario autenticado';
+    
+    return [
+        'id_usuario'  => $user->id,
+        'nombre'      => $user->nombre,
+        'roles'       => $user->getRoleNames(),
+        'permisos'    => $user->getAllPermissions()->pluck('name'),
+        'puede_ver'   => $user->can('ver-rol'),
+    ];
+})->middleware('auth');
+
+
 // ─── Dashboards por rol (protegidos con auth) ─────────────────────────────
 Route::middleware(['auth'])->group(function () {
 
