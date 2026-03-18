@@ -1,69 +1,81 @@
 @extends('layouts.app')
 
 @section('content')
-    <section class="section">
-        <div class="section-header">
-            <h3 class="page__heading">Editar Usuario</h3>
-        </div>
-        <div class="section-body">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-body">
-                     
-                        @if ($errors->any())                                                
-                            <div class="alert alert-dark alert-dismissible fade show" role="alert">
-                            <strong>¡Revise los campos!</strong>                        
-                                @foreach ($errors->all() as $error)                                    
-                                    <span class="badge badge-danger">{{ $error }}</span>
-                                @endforeach                        
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+<section class="section">
+    <div class="section-header">
+        <h3 class="page__heading">Usuarios</h3>
+    </div>
+    <div class="section-body">
+        <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Editar Usuario</h4>
+                    </div>
+                    <div class="card-body">
+
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul class="mb-0">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
                             </div>
                         @endif
 
-                        {!! Form::model($user, ['method' => 'PATCH','route' => ['usuarios.update', $user->id]]) !!}
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12">
-                                <div class="form-group">
-                                    <label for="name">Nombre</label>
-                                    {!! Form::text('name', null, array('class' => 'form-control')) !!}
-                                </div>
+                        <form action="{{ route('usuarios.update', $user) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+
+                            <div class="form-group">
+                                <label>Nombre completo</label>
+                                <input type="text" name="name" class="form-control" value="{{ old('name', $user->name) }}" required>
                             </div>
-                            <div class="col-xs-12 col-sm-12 col-md-12">
-                                <div class="form-group">
-                                    <label for="email">E-mail</label>
-                                    {!! Form::text('email', null, array('class' => 'form-control')) !!}
-                                </div>
+
+                            <div class="form-group">
+                                <label>Correo electrónico</label>
+                                <input type="email" name="email" class="form-control" value="{{ old('email', $user->email) }}" required>
                             </div>
-                            <div class="col-xs-12 col-sm-12 col-md-12">
-                                <div class="form-group">
-                                    <label for="password">Password</label>
-                                    {!! Form::password('password', array('class' => 'form-control')) !!}
-                                </div>
+
+                            <div class="form-group">
+                                <label>Nueva contraseña <small class="text-muted">(dejar vacío para no cambiar)</small></label>
+                                <input type="password" name="password" class="form-control" placeholder="Nueva contraseña">
                             </div>
-                            <div class="col-xs-12 col-sm-12 col-md-12">
-                                <div class="form-group">
-                                    <label for="confirm-password">Confirmar Password</label>
-                                    {!! Form::password('confirm-password', array('class' => 'form-control')) !!}
-                                </div>
+
+                            <div class="form-group">
+                                <label>Confirmar nueva contraseña</label>
+                                <input type="password" name="confirm-password" class="form-control">
                             </div>
-                            <div class="col-xs-12 col-sm-12 col-md-12">
-                                <div class="form-group">
-                                    <label for="">Roles</label>
-                                    {!! Form::select('roles[]', $roles,$userRole, array('class' => 'form-control')) !!}
-                                </div>
+
+                            <div class="form-group">
+                                <label>Rol</label>
+                                <select name="roles" class="form-control" required>
+                                    <option value="">-- Selecciona un rol --</option>
+                                    @foreach ($roles as $rol)
+                                        <option value="{{ $rol }}" {{ isset($userRole[$rol]) ? 'selected' : '' }}>
+                                            {{ $rol }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <div class="col-xs-12 col-sm-12 col-md-12">
-                                <button type="submit" class="btn btn-primary">Guardar</button>
+
+                            <div class="d-flex justify-content-between">
+                                <a href="{{ route('usuarios.index') }}" class="btn btn-secondary">
+                                    <i class="fa fa-arrow-left"></i> Cancelar
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-save"></i> Actualizar
+                                </button>
                             </div>
-                        </div>
-                        {!! Form::close() !!}
-                        </div>
+
+                        </form>
                     </div>
                 </div>
+
             </div>
         </div>
-    </section>
+    </div>
+</section>
 @endsection

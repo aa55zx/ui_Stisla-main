@@ -2,92 +2,79 @@
 
 @section('content')
 <section class="section">
-  <div class="section-header">
-      <h3 class="page__heading">Usuarios</h3>
-  </div>
-      <div class="section-body">
-          <div class="row">
-              <div class="col-lg-12">
-                  <div class="card">
-                      <div class="card-body">
-                                                   
-                             
-                      <a class="btn btn-warning" href="{{ route('usuarios.create') }}">Nuevo</a>
-                      <div>
-                      <br>
-                      </div>
-                      
-                         <!-- <form  class="d-flex">
-                         <a class="btn btn-warning" href="{{ route('usuarios.create') }}">Nuevo</a>
-                         &emsp;
-                          <input class="form-control me-2 light-table-filter" data-table="table_id" type="text" placeholder="Ingresa el nombre a buscar...">
-                          
-                         </form> -->
+    <div class="section-header">
+        <h3 class="page__heading">Usuarios</h3>
+    </div>
+    <div class="section-body">
+        <div class="row">
+            <div class="col-lg-12">
 
-                         
-            
-                            <table class="table table-striped mt-2 table_id" id="miTabla">
-                              <thead style="background-color:#4e38a4">                                     
-                                  <th style="display: none;">ID</th>
-                                  <th style="color:#fff;">Nombre</th>
-                                  <th style="color:#fff;">E-mail</th>
-                                  <th style="color:#fff;">Rol</th>
-                                  <th style="color:#fff;">Acciones</th>                                                                   
-                              </thead>
-                              <tbody>
-                                @foreach ($usuarios as $usuario)
-                                  <tr>
-                                    <td style="display: none;">{{ $usuario->id_usuario }}</td>
-                                    <td>{{ $usuario->nombre }}</td>
-                                    <td>{{ $usuario->email }}</td>
-                                    <td>
-                                      @if(!empty($usuario->getRoleNames()))
-                                        @foreach($usuario->getRoleNames() as $rolNombre)
-                                          <h5><span class="badge badge-dark">{{ $rolNombre }}</span></h5>
-                                        @endforeach
-                                      @endif
-                                    </td>
+                @if ($message = Session::get('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>{{ $message }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
 
-                                    <td>
-                                      <a class="btn btn-info" href="{{ route('usuarios.edit',$usuario->id_usuario) }}">Editar</a>
-
-                                      {!! Form::open(['method' => 'DELETE','route' => ['usuarios.destroy', $usuario->id_usuario],'style'=>'display:inline']) !!}
-                                          {!! Form::submit('Borrar', ['class' => 'btn btn-danger']) !!}
-                                      {!! Form::close() !!}
-                                    </td>
-                                  </tr>
-                                @endforeach
-                              </tbody>
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4>Listado de Usuarios</h4>
+                        <a href="{{ route('usuarios.create') }}" class="btn btn-primary btn-sm">
+                            <i class="fa fa-plus"></i> Nuevo Usuario
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Nombre</th>
+                                        <th>Email</th>
+                                        <th>Roles</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse ($usuarios as $usuario)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $usuario->nombre_completo }}</td>
+                                        <td>{{ $usuario->email }}</td>
+                                        <td>
+                                            @foreach ($usuario->getRoleNames() as $rol)
+                                                <span class="badge badge-primary">{{ $rol }}</span>
+                                            @endforeach
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('usuarios.edit', $usuario) }}" class="btn btn-warning btn-sm">
+                                                <i class="fa fa-edit"></i> Editar
+                                            </a>
+                                            <form action="{{ route('usuarios.destroy', $usuario) }}" method="POST" style="display:inline-block"
+                                                onsubmit="return confirm('¿Eliminar este usuario?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    <i class="fa fa-trash"></i> Eliminar
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center">No hay usuarios registrados.</td>
+                                    </tr>
+                                    @endforelse
+                                </tbody>
                             </table>
-                            <!-- Centramos la paginacion a la derecha -->   
-                            
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-    </section>
-    <!-- JQUERY -->
-    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
-    <!-- DATATABLES -->
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <!-- BOOTSTRAP -->
-    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
-    <script>
-        new DataTable('#miTabla', {
-    lengthMenu: [
-        [2, 5, 10],
-        [2, 5, 10]
-    ],
+                        </div>
+                    </div>
+                </div>
 
-    columnDefs: [
-        { targets: 0, visible: false },
-        { targets: 4, orderable: false }
-    ],
-
-    language: {
-        url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
-    }
-});
-    </script>
+            </div>
+        </div>
+    </div>
+</section>
 @endsection
